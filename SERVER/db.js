@@ -30,6 +30,8 @@ const createFoodsTable = async () => {
                   id SERIAL PRIMARY KEY UNIQUE,
                   name VARCHAR(255) NOT NULL,
                   owner_id INT NOT NULL,
+                  restaurant_name VARCHAR(255) NOT NULL,
+                  districts VARCHAR[] DEFAULT '{}',
                   status INT NOT NULL DEFAULT 1,
                   price INT NOT NULL,
                   comments_id INT[] DEFAULT '{}'
@@ -111,13 +113,13 @@ const registerAdmin = async (request, response) => {
      const q = `INSERT INTO admin (restaurant_name, restaurant_district, address, service_districts, openning_hour, closing_hour, fixed_cost, fixed_time, password, email)
                VALUES(
                     $1,$2,$3,$4,$5,$6,$7,$8,$9,$10
-                    );`
+                    ) RETURNING id;`
      try {
           values = [request.body.restaurant_name, request.body.restaurant_district, request.body.address,
           request.body.service_districts, request.body.openning_hour, request.body.closing_hour, request.body.fixed_cost,
           request.body.fixed_time, request.body.password, request.body.email]
-          await pool.query(q, values)
-          response.status(200).json(100)
+          id = await pool.query(q, values)
+          response.status(200).json(id.rows[0].id)
      } catch (err) {
           console.log(err.stack)
      }
@@ -127,10 +129,24 @@ const registerClient = async (request, response) => {
      const q = `INSERT INTO clients (mobile, password, name, district, address)
                VALUES(
                     $1,$2,$3,$4,$5
-                    );`
+                    ) RETURNING id;`
      try {
           values = [request.body.mobile, request.body.password, request.body.name,
           request.body.district, request.body.address]
+          id = await pool.query(q, values)
+          response.status(200).json(id.rows[0].id)
+     } catch (err) {
+          console.log(err.stack)
+     }
+}
+
+const createFood = async (request, response) => {
+     const q = `INSERT INTO foods (owner_id, name, price, restaurant_name, districts)
+     VALUES(
+          $1,$2, $3, $4, $5
+          );`
+     try {
+          values = [request.body.owner_id, request.body.name, request.body.price, request.body.restaurant_name, request.body.districts]
           await pool.query(q, values)
           response.status(200).json(100)
      } catch (err) {
@@ -138,18 +154,17 @@ const registerClient = async (request, response) => {
      }
 }
 
-const createFood = async (request, response) => {
-     const q = `INSERT INTO foods (owner_id, name, price)
-     VALUES(
-          $1,$2, $3
-          );`
+const findNameAndDistrcitsById = async (request, response) => {
+     const q = `SELECT restaurant_name, service_districts FROM admin WHERE id = $1`
+
      try {
-          values = [request.body.owner_id, request.body.name, request.body.price]
-          await pool.query(q, values)
-          response.status(200).json(100)
+          values = [request.params.id]
+          let res = await pool.query(q, values)
+          response.status(200).json(res.rows[0])
      } catch (err) {
           console.log(err.stack)
      }
+
 }
 
 const createClientComment = async (request, response) => {
@@ -285,6 +300,16 @@ const getFavorites = async (request, response) => {
      }
 }
 
+const getFoods = async (request, response) => {
+     const q = `SELECT * FROM foods WHERE status = 1`
+     try {
+          let foods =  await pool.query(q)
+          response.status(200).json(foods.rows)
+     } catch (err) {
+          console.log(err.stack)
+     }
+}
+
 //initialize: create tables for first time
 createAdminTable()
 createFoodsTable()
@@ -311,5 +336,7 @@ module.exports = {
      updateFood,
      checkOrder,
      getHistory,
-     getFavorites
+     getFavorites,
+     getFoods,
+     findNameAndDistrcitsById
 }

@@ -28,13 +28,14 @@ app.post('/admin/comment', db.createAdminComment)
 app.delete('/admin/deleteFood', db.deleteFood)
 app.put('/admin/updateFood', db.updateFood)
 app.put('/admin/checkOrder', db.checkOrder)
-
+app.get('/admin/findNameAndDistrcitsById/:id', db.findNameAndDistrcitsById)
 //clients routes
 app.post('/client/register', db.registerClient)
 app.post('/client/comment', db.createClientComment)
 app.post('/client/order', db.createOrder)
 app.post('/client/history', db.getHistory)
 app.post('/client/fav', db.getFavorites)
+app.get('/client/allfoods', db.getFoods)
 
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)
