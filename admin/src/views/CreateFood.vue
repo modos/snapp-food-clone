@@ -42,6 +42,8 @@ export default {
                 name: this.name,
                 price: this.price,
                 restaurant_name: this.res_name,
+                delivery_cost: localStorage.getItem('fixed_cost'),
+                time: localStorage.getItem('fixed_time'),
                 districts: this.res_dist
             })}
             fetch('http://localhost:3000/admin/createFood', requestOptions)

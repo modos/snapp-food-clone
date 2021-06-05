@@ -74,7 +74,7 @@ export default {
         body: JSON.stringify({ 	restaurant_name: this.restaurant,
 	restaurant_district: this.restaurant_d,
 	address: this.address,
-	service_districts: this.service_d.split(","), 
+	service_districts: this.service_d.split("،"), 
 	openning_hour: this.open_time, 
 	closing_hour: this.close_time,
 	fixed_cost: this.fixed_cost,
@@ -86,7 +86,17 @@ export default {
         .then((response) => response.json())
         .then((data) => {
             if (data) {
-                this.$router.push({ name: 'About', params: { id: data } })
+              localStorage.setItem('name', this.restaurant)
+              localStorage.setItem('email', this.email)
+              localStorage.setItem('password', this.password)
+              localStorage.setItem('fixed_time', this.fixed_time)
+              localStorage.setItem('fixed_cost', this.fixed_cost)
+              localStorage.setItem('closing_hour', this.close_time)
+              localStorage.setItem('openning_hour', this.open_time)
+              localStorage.setItem('service_districts', this.service_d)
+              localStorage.setItem('address', this.address)
+              localStorage.setItem('restaurant_district', this.restaurant_d)
+                this.$router.push({ name: 'Dashboard', params: { id: data } })
         }})
     }
   }

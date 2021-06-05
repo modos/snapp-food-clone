@@ -34,6 +34,8 @@ const createFoodsTable = async () => {
                   districts VARCHAR[] DEFAULT '{}',
                   status INT NOT NULL DEFAULT 1,
                   price INT NOT NULL,
+                  time INT NOT NULL,
+                  delivery_cost INT NOT NULL,
                   comments_id INT[] DEFAULT '{}'
            );`
 
@@ -129,24 +131,25 @@ const registerClient = async (request, response) => {
      const q = `INSERT INTO clients (mobile, password, name, district, address)
                VALUES(
                     $1,$2,$3,$4,$5
-                    ) RETURNING id;`
+                    ) RETURNING *;`
      try {
           values = [request.body.mobile, request.body.password, request.body.name,
           request.body.district, request.body.address]
           id = await pool.query(q, values)
-          response.status(200).json(id.rows[0].id)
+          response.status(200).json(id.rows[0])
      } catch (err) {
           console.log(err.stack)
      }
 }
 
 const createFood = async (request, response) => {
-     const q = `INSERT INTO foods (owner_id, name, price, restaurant_name, districts)
+     const q = `INSERT INTO foods (owner_id, name, price, restaurant_name, districts, time, delivery_cost)
      VALUES(
-          $1,$2, $3, $4, $5
+          $1,$2, $3, $4, $5, $6, $7
           );`
      try {
-          values = [request.body.owner_id, request.body.name, request.body.price, request.body.restaurant_name, request.body.districts]
+          values = [request.body.owner_id, request.body.name, request.body.price,
+                request.body.restaurant_name, request.body.districts, request.body.time, request.body.delivery_cost]
           await pool.query(q, values)
           response.status(200).json(100)
      } catch (err) {
@@ -301,10 +304,40 @@ const getFavorites = async (request, response) => {
 }
 
 const getFoods = async (request, response) => {
-     const q = `SELECT * FROM foods WHERE status = 1`
+     const q = `SELECT * FROM foods WHERE status = 1 AND $1 = ANY(districts)`
      try {
-          let foods =  await pool.query(q)
+          let foods =  await pool.query(q, [request.body.district])
           response.status(200).json(foods.rows)
+     } catch (err) {
+          console.log(err.stack)
+     }
+}
+
+const updateClient = async (request, response) => {
+     const q = `UPDATE clients SET name = $1, mobile = $2, district = $3
+                , password = $4, address = $5 WHERE id = $6;`
+
+     try {
+          await pool.query(q, [request.body.name, request.body.mobile, request.body.district
+                              , request.body.password, request.body.address, request.body.id])
+          response.status(200).json(100)
+     } catch (err) {
+          console.log(err.stack)
+     }
+}
+
+const updateAdmin = async (request, response) => {
+     const q = `UPDATE admin SET restaurant_name = $1, restaurant_district = $2, address = $3
+     , service_districts = $4, openning_hour = $5, closing_hour = $6,
+           fixed_cost = $7, fixed_time = $8, password = $9, email = $10  WHERE id = $11;`
+
+     try {
+          await pool.query(q, [request.body.restaurant_name, request.body.restaurant_district,
+                               request.body.address
+                              , request.body.service_districts, request.body.openning_hour, request.body.closing_hour,
+                              request.body.fixed_cost,request.body.fixed_time,request.body.password, request.body.email,
+                              request.body.id])
+          response.status(200).json(100)
      } catch (err) {
           console.log(err.stack)
      }
@@ -338,5 +371,7 @@ module.exports = {
      getHistory,
      getFavorites,
      getFoods,
-     findNameAndDistrcitsById
+     findNameAndDistrcitsById,
+     updateClient,
+     updateAdmin
 }

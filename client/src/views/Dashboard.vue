@@ -16,7 +16,6 @@ components: {
   data (){
     return {
       id: this.$route.params.id,
-      name: "pas"
     }
   }
 }

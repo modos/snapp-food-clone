@@ -9,7 +9,7 @@
         dense
         nav
       >
-        <v-list-item link  router :to="editProfile">
+        <v-list-item link  router :to="{ name: 'EditProfile', params: { id: this.id }}">
           <v-list-item-icon>
             <v-icon class="white--text">mdi-account</v-icon>
           </v-list-item-icon>
@@ -42,7 +42,6 @@ export default {
     return {
       id: this.$route.params.id,
       drawer: false,
-      editProfile: '/about/21/editprofile',
     };
   },
   methods: {

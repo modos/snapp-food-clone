@@ -2,7 +2,7 @@
   <v-container fill-height fluid class="py-6">
     <v-row align="center" justify="center">
       <v-card width="40%">
-        <v-card-title class="d-flex justify-center">ورود مدیر</v-card-title>
+        <v-card-title class="d-flex justify-center">ورود مشتری</v-card-title>
         <v-form class="px-6">
           <v-text-field label="شماره موبایل" v-model="mobile"></v-text-field>
           <v-text-field
@@ -61,7 +61,13 @@ export default {
         .then((response) => response.json())
         .then((data) => {
             if (data) {
-                this.$router.push({ name: 'About', params: { id: data } })
+                localStorage.setItem('name', this.name)
+                localStorage.setItem('mobile', this.mobile)
+                localStorage.setItem('district', this.district)
+                localStorage.setItem('address', this.address)
+                localStorage.setItem('password', this.password)
+                localStorage.setItem('property', data.property)
+                this.$router.push({ name: 'Dashboard', params: { id: data.id } })
         }})
     }
   }
