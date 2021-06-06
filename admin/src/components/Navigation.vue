@@ -27,6 +27,15 @@
             <v-list-item-title class="white--text">افزودن غذا</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+            <v-list-item link  router :to="{ name: 'Orders', params: { id: this.id }}">
+          <v-list-item-icon>
+            <v-icon class="white--text">mdi-format-list-checks</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title class="white--text">سفارش ها</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
       
            </v-navigation-drawer>      

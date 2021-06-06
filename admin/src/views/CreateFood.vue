@@ -1,8 +1,5 @@
 <template>
   <v-container>
-    <v-container>
-      <h1>{{res_dist}}</h1>
-    </v-container>
     <v-col cols="6" offset="3">
       <v-text-field label="نام غذا" v-model="name"></v-text-field>
       <v-text-field label="قیمت" v-model="price"></v-text-field>

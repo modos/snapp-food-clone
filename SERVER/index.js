@@ -30,6 +30,7 @@ app.put('/admin/updateFood', db.updateFood)
 app.put('/admin/checkOrder', db.checkOrder)
 app.get('/admin/findNameAndDistrcitsById/:id', db.findNameAndDistrcitsById)
 app.put('/admin/updateprofile', db.updateAdmin)
+app.get('/admin/orders/:id', db.getOrders)
 
 //clients routes
 app.post('/client/register', db.registerClient)

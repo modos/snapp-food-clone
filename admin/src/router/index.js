@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import EditProfile from '../views/EditProfile.vue'
 import CreateFood from '../views/CreateFood.vue'
+import Orders from "../views/Orders.vue";
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,12 @@ const routes = [
         component: CreateFood,
         probs: true
       },
+      {
+        path: 'orders',
+        name: 'Orders',
+        component: Orders,
+        probs: true
+      }
     ]
   }
 ]

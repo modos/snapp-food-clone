@@ -343,6 +343,16 @@ const updateAdmin = async (request, response) => {
      }
 }
 
+const getOrders = async (request, response) => {
+     const q = `SELECT * FROM orders WHERE restaurant_id = $1 AND status = 0;`
+     try {
+          let orders =  await pool.query(q, [request.params.id])
+          response.status(200).json(orders.rows)
+     } catch (err) {
+          console.log(err.stack)
+     }
+}
+
 //initialize: create tables for first time
 createAdminTable()
 createFoodsTable()
@@ -373,5 +383,6 @@ module.exports = {
      getFoods,
      findNameAndDistrcitsById,
      updateClient,
-     updateAdmin
+     updateAdmin,
+     getOrders
 }
