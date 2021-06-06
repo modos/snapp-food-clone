@@ -344,7 +344,17 @@ const updateAdmin = async (request, response) => {
 }
 
 const getOrders = async (request, response) => {
-     const q = `SELECT * FROM orders WHERE restaurant_id = $1 AND status = 0;`
+     const q = `SELECT * FROM orders WHERE restaurant_id = $1`
+     try {
+          let orders =  await pool.query(q, [request.params.id])
+          response.status(200).json(orders.rows)
+     } catch (err) {
+          console.log(err.stack)
+     }
+}
+
+const getClientOrders = async (request, response) => {
+     const q = `SELECT * FROM orders WHERE client_id = $1`
      try {
           let orders =  await pool.query(q, [request.params.id])
           response.status(200).json(orders.rows)
@@ -384,5 +394,6 @@ module.exports = {
      findNameAndDistrcitsById,
      updateClient,
      updateAdmin,
-     getOrders
+     getOrders,
+     getClientOrders
 }

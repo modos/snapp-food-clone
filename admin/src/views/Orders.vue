@@ -7,10 +7,12 @@
               <v-list-item-content>
                 <v-list-item-title>شناسه مشتری: {{item.client_id}}</v-list-item-title>
                 <v-list-item-subtitle>شناسه غذا ها: {{item.foods_id}}</v-list-item-subtitle>
+                <v-list-item-subtitle>وضعیت: {{showstatus(item.status)}}</v-list-item-subtitle>
                 <v-list-item-action>
                    <v-row class="mt-12" align="center" justify="center">
-                        <v-btn class="ml-2" color="error" @click="reject(item)">رد</v-btn>
-                    <v-btn color="success" @click="accept(item)">پذیرش</v-btn>
+                    <v-btn color="success" @click="preparing(item)">درحال آماده سازی</v-btn>
+                    <v-btn color="primary" class="mr-2" @click="sending(item)">در حال ارسال توسط پیک</v-btn>
+                    <v-btn color="warning" class="mr-2" @click="recieved(item)">تحویل داده شده</v-btn>
                    </v-row>
                 </v-list-item-action>
               </v-list-item-content>
@@ -39,7 +41,29 @@ export default {
         }
     },
     methods: {
-        accept(item){
+        showstatus(status) {
+                let s = "";
+                switch (status) {
+                    case 0:
+                        s = "در انتظار تائید"
+                        break;
+                    case 1:
+                        s = "در حال آماده  سازی"
+                        break;
+
+                    case 2:
+                        s = "در حال ارسال توسط پیک"  
+                        break;
+                    case 3:
+                        s = "تحویل داده شده"
+                        break;      
+                    default:
+                        break;
+                }
+
+                return s
+        },
+        preparing(item){
             const requestOptions = {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -51,11 +75,12 @@ export default {
         .then((response) => response.json())
         .then((data) => {
             if (data) {
-                let indexForRemove = this.orders.findIndex((v) => v.id === item.id)
-                this.$delete(this.orders,indexForRemove)
+                let index = this.orders.findIndex((v) => v.id === item.id)
+                //this.$delete(this.orders,indexForRemove)
+                this.orders[index].status = 1
         }}
         )},
-        reject(item){
+        sending(item){
             const requestOptions = {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -67,11 +92,30 @@ export default {
         .then((response) => response.json())
         .then((data) => {
             if (data) {
-                let indexForRemove = this.orders.findIndex((v) => v.id === item.id)
-                this.$delete(this.orders,indexForRemove)
+                let index = this.orders.findIndex((v) => v.id === item.id)
+                //this.$delete(this.orders,indexForRemove)
+                this.orders[index].status = 2
+        }}
+        )},
+        recieved(item){
+            const requestOptions = {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    status: 3,
+                    id: item.id
+            })}
+            fetch('http://localhost:3000/admin/checkorder', requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+            if (data) {
+                let index = this.orders.findIndex((v) => v.id === item.id)
+                //this.$delete(this.orders,indexForRemove)
+                this.orders[index].status = 3
         }}
         )
         }
-    }
+    },
+
 }
 </script>

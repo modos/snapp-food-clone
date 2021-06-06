@@ -9,7 +9,16 @@
         dense
         nav
       >
-        <v-list-item link  router :to="{ name: 'EditProfile', params: { id: this.id }}">
+      <v-list-item  link  router :to="{ name: 'Dashboard', params: { id: this.id }}">
+          <v-list-item-icon>
+            <v-icon class="white--text">mdi-home</v-icon>
+          </v-list-item-icon>
+           <v-list-item-content>
+            <v-list-item-title class="white--text">خانه</v-list-item-title>
+          </v-list-item-content>
+</v-list-item>
+
+          <v-list-item link  router :to="{ name: 'EditProfile', params: { id: this.id }}">
           <v-list-item-icon>
             <v-icon class="white--text">mdi-account</v-icon>
           </v-list-item-icon>

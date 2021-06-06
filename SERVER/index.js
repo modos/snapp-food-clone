@@ -40,6 +40,7 @@ app.post('/client/history', db.getHistory)
 app.post('/client/fav', db.getFavorites)
 app.post('/client/allfoods', db.getFoods)
 app.put('/client/updateprofile', db.updateClient)
+app.get('/client/getorders/:id', db.getClientOrders)
 
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)

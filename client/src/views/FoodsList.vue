@@ -95,11 +95,15 @@ export default {
     allcost: function () {
         let cost = 0
         for (let index = 0; index < this.selected.length; index++) {
-            cost += this.selected[index].price + this.selected[index].delivery_cost;
+            cost += this.selected[index].price
             this.selected_id.push(this.selected[index].id)
             
         }
-      return cost
+        if (this.selected[0]){
+      return cost + this.selected[0].delivery_cost
+        }
+
+        return cost
     }
   },
   methods: {
