@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import EditProfile from '../views/EditProfile.vue'
 import FoodsList from '../views/FoodsList.vue'
+import History from '../views/History.vue'
 
 Vue.use(VueRouter)
 
@@ -37,6 +38,12 @@ const routes = [
         path: 'foodslist',
         name: 'FoodsList',
         component: FoodsList,
+        probs: true
+      },
+      {
+        path: 'history',
+        name: 'History',
+        component: History,
         probs: true
       },
     ]

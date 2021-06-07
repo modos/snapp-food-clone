@@ -27,6 +27,7 @@
             <v-list-item-title class="white--text">ویرایش پروفایل</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
         <v-list-item link  router :to="{ name: 'FoodsList', params: { id: this.id }}">
           <v-list-item-icon>
             <v-icon class="white--text">mdi-note-plus</v-icon>
@@ -34,6 +35,16 @@
 
           <v-list-item-content>
             <v-list-item-title class="white--text">سفارش غذا</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+         <v-list-item link  router :to="{ name: 'History', params: { id: this.id }}">
+          <v-list-item-icon>
+            <v-icon class="white--text">mdi-history</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title class="white--text">تاریخچه سفارشات شما</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>

@@ -36,7 +36,8 @@ const createFoodsTable = async () => {
                   price INT NOT NULL,
                   time INT NOT NULL,
                   delivery_cost INT NOT NULL,
-                  comments_id INT[] DEFAULT '{}'
+                  comments_id INT[] DEFAULT '{}',
+                  rates_id INT[] DEFAULT '{}'
            );`
 
      try {
@@ -363,6 +364,28 @@ const getClientOrders = async (request, response) => {
      }
 }
 
+const getAdminFoods = async (request, response) => {
+     const q = `SELECT * FROM foods WHERE owner_id = $1`
+
+     try {
+          let orders =  await pool.query(q, [request.params.id])
+          response.status(200).json(orders.rows)
+     } catch (err) {
+          console.log(err.stack)
+     }
+}
+
+const addRateToFood = async (request, response) => {
+     const q = `UPDATE foods SET rates_id = rates_id || ${request.body.rate} WHERE id = $1;`
+
+     try {
+          await pool.query(q, [request.body.id])
+          response.status(200).json(100)
+     } catch (err) {
+          console.log(err.stack)
+     }
+}
+
 //initialize: create tables for first time
 createAdminTable()
 createFoodsTable()
@@ -395,5 +418,7 @@ module.exports = {
      updateClient,
      updateAdmin,
      getOrders,
-     getClientOrders
+     getClientOrders,
+     getAdminFoods,
+     addRateToFood
 }
