@@ -32,6 +32,7 @@ app.get('/admin/findNameAndDistrcitsById/:id', db.findNameAndDistrcitsById)
 app.put('/admin/updateprofile', db.updateAdmin)
 app.get('/admin/orders/:id', db.getOrders)
 app.get('/admin/foods/:id', db.getAdminFoods)
+app.get('/admin/getcomments/:id', db.getComments)
 
 //clients routes
 app.post('/client/register', db.registerClient)
@@ -40,7 +41,6 @@ app.post('/client/order', db.createOrder)
 app.post('/client/history', db.getHistory)
 app.post('/client/fav', db.getFavorites)
 app.post('/client/allfoods', db.getFoods)
-app.post('/client/ratefood', db.addRateToFood)
 app.put('/client/updateprofile', db.updateClient)
 app.get('/client/getorders/:id', db.getClientOrders)
 

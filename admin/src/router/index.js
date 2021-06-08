@@ -4,7 +4,8 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import EditProfile from '../views/EditProfile.vue'
 import CreateFood from '../views/CreateFood.vue'
-import Orders from "../views/Orders.vue";
+import Orders from "../views/Orders.vue"
+import Comments from "../views/Comments.vue"
 
 Vue.use(VueRouter)
 
@@ -44,6 +45,12 @@ const routes = [
         path: 'orders',
         name: 'Orders',
         component: Orders,
+        probs: true
+      },
+      {
+        path: 'comments',
+        name: 'Comments',
+        component: Comments,
         probs: true
       }
     ]

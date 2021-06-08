@@ -36,8 +36,7 @@ const createFoodsTable = async () => {
                   price INT NOT NULL,
                   time INT NOT NULL,
                   delivery_cost INT NOT NULL,
-                  comments_id INT[] DEFAULT '{}',
-                  rates_id INT[] DEFAULT '{}'
+                  comments_id INT[] DEFAULT '{}'
            );`
 
      try {
@@ -52,7 +51,8 @@ const createClientsCommentsTable = async () => {
                   client_id INT NOT NULL,
                   content VARCHAR (140) NOT NULL,
                   rate INT NOT NULL,
-                  food_id INT NOT NULL
+                  food_id INT NOT NULL,
+                  res_id INT NOT NULl
            );`
 
      try {
@@ -172,18 +172,26 @@ const findNameAndDistrcitsById = async (request, response) => {
 }
 
 const createClientComment = async (request, response) => {
-     const q = `INSERT INTO client_comments (client_id, content, rate, food_id)
+     const q = `INSERT INTO client_comments (client_id, content, rate, food_id, res_id)
      VALUES(
-          $1,$2, $3, $4
+          $1,$2, $3, $4, $5
           );`
 
-     const q2 =  `UPDATE clients SET favorite_orders_id = array_append(favorite_orders_id, $1) WHERE id = $2`    
+     const q2 =  `UPDATE clients SET favorite_orders_id = array_append(favorite_orders_id, $1) WHERE id = $2`
+     
+     const q3 = `SELECT * FROM client_comments WHERE client_id = $1 AND food_id = $2`
      try {
-          values = [request.body.client_id, request.body.content, request.body.rate, request.body.food_id]
+
+          let res_q3 = await pool.query(q3, [request.body.client_id, request.body.food_id])
+          if (res_q3.rowCount > 0){
+                response.status(205).json("You already commented for this food")
+                return
+          }
+
+          values = [request.body.client_id, request.body.content, request.body.rate, request.body.food_id, request.body.res_id]
           await pool.query(q, values)
 
           if (request.body.rate > 3) {
-               console.log(request.body.food_id)
                await pool.query(q2, [request.body.food_id, request.body.client_id])
           } 
 
@@ -287,20 +295,17 @@ const getFavorites = async (request, response) => {
           history_idx = idx.rows[0].history_orders_id
           fav_idx = idx.rows[0].favorite_orders_id
 
-          var counts = {};
-          
-          for (var i = 0; i < history_idx.length; i++) {
-            var num = history_idx[i];
-            counts[num] = counts[num] ? counts[num] + 1 : 1;
-          }
-          const filteredByValue = Object.fromEntries(
-               Object.entries(counts).filter(([key, value]) => value >= 5) )
-               
-          filtered = Object.keys(filteredByValue)
-          const foods = await pool.query(q2, [filtered])
-          response.status(200).json(foods.rows[0])
+          let indexes_history = Object.values(history_idx)
+          let indexes_favs = Object.values(fav_idx)
+
+          let indexes = indexes_favs.concat(indexes_history)
+          indexes = indexes.filter((x, i, a) => a.indexOf(x) == i)
+
+          filtered = history_idx.ap
+          const foods = await pool.query(q2, [indexes])
+          response.status(200).json(foods.rows)
      } catch (err) {
-          console.log(err.stack)
+          //console.log(err.stack)
      }
 }
 
@@ -375,15 +380,15 @@ const getAdminFoods = async (request, response) => {
      }
 }
 
-const addRateToFood = async (request, response) => {
-     const q = `UPDATE foods SET rates_id = rates_id || ${request.body.rate} WHERE id = $1;`
-
+const getComments = async (request, response) => {
+     const q = `SELECT * FROM client_comments WHERE res_id = $1`
      try {
-          await pool.query(q, [request.body.id])
-          response.status(200).json(100)
+          let comments =  await pool.query(q, [request.params.id])
+          response.status(200).json(comments.rows)
      } catch (err) {
           console.log(err.stack)
      }
+
 }
 
 //initialize: create tables for first time
@@ -420,5 +425,5 @@ module.exports = {
      getOrders,
      getClientOrders,
      getAdminFoods,
-     addRateToFood
+     getComments
 }

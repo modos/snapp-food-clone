@@ -5,6 +5,7 @@ import Login from '../views/Login.vue'
 import EditProfile from '../views/EditProfile.vue'
 import FoodsList from '../views/FoodsList.vue'
 import History from '../views/History.vue'
+import Favourites from '../views/Favourites.vue'
 
 Vue.use(VueRouter)
 
@@ -44,6 +45,12 @@ const routes = [
         path: 'history',
         name: 'History',
         component: History,
+        probs: true
+      },
+      {
+        path: 'favourites',
+        name: 'Favourites',
+        component: Favourites,
         probs: true
       },
     ]

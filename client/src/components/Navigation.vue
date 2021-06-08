@@ -9,7 +9,7 @@
         dense
         nav
       >
-      <v-list-item  link  router :to="{ name: 'Dashboard', params: { id: this.id }}">
+      <v-list-item link  router :to="{ name: 'Dashboard', params: { id: this.id }}">
           <v-list-item-icon>
             <v-icon class="white--text">mdi-home</v-icon>
           </v-list-item-icon>
@@ -45,6 +45,16 @@
 
           <v-list-item-content>
             <v-list-item-title class="white--text">تاریخچه سفارشات شما</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item link  router :to="{ name: 'Favourites', params: { id: this.id }}">
+          <v-list-item-icon>
+            <v-icon class="white--text">mdi-account-heart</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title class="white--text">علاقه مندی ها</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
