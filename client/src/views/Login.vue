@@ -3,6 +3,10 @@
     <v-row align="center" justify="center">
       <v-card width="40%">
         <v-card-title class="d-flex justify-center">ورود مشتری</v-card-title>
+
+        <div id="map" class="map"></div>
+        <h3 class="my-3 mx-3">{{district}}</h3>
+
         <v-form class="px-6">
           <v-text-field label="شماره موبایل" v-model="mobile"></v-text-field>
           <v-text-field
@@ -14,7 +18,6 @@
             @click:append="show1 = !show1"
           ></v-text-field>
           <v-text-field label="نام" v-model="name"></v-text-field>
-          <v-text-field label="منطقه" v-model="district"></v-text-field>
           <v-text-field label="آدرس" v-model="address"></v-text-field>
           <v-card-actions>
             <v-btn color="success" @click="submit">ورود</v-btn>
@@ -26,9 +29,17 @@
 </template>
 
 <script>
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import geo from "../assets/geo.json"
+
 var hasNumber = /\d/;
 export default {
+  map: '',
   name: "Login",
+  mounted() {
+    this.initMap()
+  },
   data() {
     return {
       show1: false,
@@ -40,11 +51,37 @@ export default {
         hasNumber: (v) => hasNumber.test(v) || "باید حاوی عدد باشد",
       },
       address: "",
-      district: "",
+      district: "منطقه خودتان را روی نقشه مشخص کنید",
       name: ""
     };
   },
   methods: {
+    onEachFeature(feature, layer) {
+      if (feature.properties && feature.properties.name) {
+        
+        layer.bindPopup(feature.properties.name)
+        layer.on('mouseover', () => { layer.openPopup() })
+        layer.on('mouseout', () => { layer.closePopup() })
+        layer.on('click', ()  => {this.district = feature.properties.name});
+      }
+   },
+    initMap() {
+  let map = L.map('map', {
+    center: [35.715298, 51.404343],
+    zoom: 10
+});
+L.tileLayer(
+       "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibW9kb3NhbSIsImEiOiJja3Ezc3Y2b3UwZ24wMm5vNmxzb2dsaXVmIn0.d91AwhSxpvxChVI7PsyFew",
+       {
+         attribution:
+           'Map data (c) <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+         maxZoom: 18,
+         id: "mapbox/streets-v11",
+         accessToken:"pk.eyJ1IjoibW9kb3NhbSIsImEiOiJja3Ezc3Y2b3UwZ24wMm5vNmxzb2dsaXVmIn0.d91AwhSxpvxChVI7PsyFew",
+       }
+     ).addTo(map);
+      L.geoJSON(geo, {onEachFeature: this.onEachFeature}).addTo(map);
+    },
     submit() {
       const requestOptions = {
         method: 'POST',
@@ -77,5 +114,9 @@ export default {
 <style>
 * {
   font-family: "Yekan";
+}
+
+.map {
+  height: 500px;
 }
 </style>
