@@ -1,7 +1,4 @@
 const express = require('express');
-const config = require('./config');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser')
 const app = express();
 const router = express.Router();
@@ -47,3 +44,4 @@ app.get('/client/getorders/:id', db.getClientOrders)
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)
   })
+

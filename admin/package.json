@@ -10,8 +10,11 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "leaflet": "^1.7.1",
+    "socket.io-client": "^4.1.2",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
+    "vue-socket.io": "^3.0.10",
+    "vue-socket.io-extended": "^4.2.0",
     "vuetify": "^2.4.0"
   },
   "devDependencies": {

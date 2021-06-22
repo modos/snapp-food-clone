@@ -295,7 +295,15 @@ const getFavorites = async (request, response) => {
           history_idx = idx.rows[0].history_orders_id
           fav_idx = idx.rows[0].favorite_orders_id
 
-          let indexes_history = Object.values(history_idx)
+          const aCount = new Map([...new Set(history_idx)].map(
+               x => [x, history_idx.filter(y => y === x).length]
+           ));
+               
+           let h5 = history_idx.filter(function (e) {
+               return aCount.get(e) > 5
+           })
+
+          let indexes_history = Object.values(h5)
           let indexes_favs = Object.values(fav_idx)
 
           let indexes = indexes_favs.concat(indexes_history)
@@ -390,6 +398,25 @@ const getComments = async (request, response) => {
      }
 
 }
+
+function countItems(arr) {
+     var a = [],
+       b = [],
+       prev;
+   
+     arr.sort();
+     for (var i = 0; i < arr.length; i++) {
+       if (arr[i] !== prev) {
+         a.push(arr[i]);
+         b.push(1);
+       } else {
+         b[b.length - 1]++;
+       }
+       prev = arr[i];
+     }
+   
+     return [a, b];
+   }
 
 //initialize: create tables for first time
 createAdminTable()

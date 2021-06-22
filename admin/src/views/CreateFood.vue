@@ -50,6 +50,7 @@
 <script>
 export default {
   async created() {
+
       let id = this.$route.params.id
       let res = await fetch(`http://localhost:3000/admin/findNameAndDistrcitsById/${id}`)
       res = await res.json()
@@ -144,7 +145,7 @@ let res2 = await fetch(`http://localhost:3000/admin/foods/${id}`)
             if (res.status === 200){
               this.updateList()
             }
-        }
+        },
     }
 }
 </script>

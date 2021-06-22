@@ -20,7 +20,11 @@
     :search="search"
             item-key="id"
         show-select
-    hide-default-footer
+    :items-per-page="10"
+     :footer-props="{
+        dis: true,
+        showsItemsPerPage: false,
+      }"
     class="elevation-1 mb-12"
   ></v-data-table>
 
@@ -46,7 +50,17 @@
 
 <script>
 export default {
+  sockets: {
+        connect: function () {
+            console.log('socket connected')
+        },
+        newFood: function(data){
+              this.foods.push(data)
+              console.log("fuck")
+        }
+    },
     async created() {
+
         const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -63,6 +77,7 @@ export default {
     },
     data() {
         return {
+          connection: null,
             success: false,
             selected_id: [],
             selected: [],
@@ -131,3 +146,12 @@ export default {
 
 }
 </script>
+
+<style>
+.v-application--is-rtl .v-data-footer__select {
+  display: none !important;
+}
+.v-application--is-rtl .v-data-footer__pagination{
+  display: none !important;
+}
+</style>
