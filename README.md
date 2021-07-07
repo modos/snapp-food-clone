@@ -5,6 +5,23 @@
 <p>Database: Postgresql</p>
 <hr>
 
+### Features
+<p>✔ Map (Leaflet library and mapbox api)</p>
+<p>✔ Dashboard</p>
+<p>✔ Comments</p>
+<p>✔ Edit profile</p>
+<p>✔ Add food to restaurant menu</p>
+<p>✔ Client can order foods</p>
+<p>✔ Admin can see orders and deliver it</p>
+<p>✔ and etc...</p>
+<hr>
+
+### Todo
+<p>🔴 Socket</p>
+<p>🔴 Write Test for backend</p>
+
+<hr>
+
 ### Admin
 
 <div>
